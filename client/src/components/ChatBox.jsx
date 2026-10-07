@@ -2,9 +2,10 @@ import React, {useState,useEffect,useRef} from 'react'
 import { useAppContext } from '../context/AppContext'
 import { assets } from '../assets/assets'
 import Message from './Message.jsx'
+import toast from 'react-hot-toast'
 
 const ChatBox = () => {
-  const {selectedChat, theme}=useAppContext()
+  const {selectedChat, theme , user, axios, token, setUser}=useAppContext()
    
  const containerRef = useRef(null)
 
@@ -15,7 +16,36 @@ const ChatBox = () => {
   const [isPublished, setIsPublished]=useState(false)
 
   const  onSubmit=async (e)=>{
+    try{
     e.preventDefault()
+    if(!user) return toast('Login to send message')
+      setLoading(true)
+    const promptCopy =prompt
+    setPrompt('')
+    setMessages(prev => [...prev,{role: 'user', content:prompt, timestamp:Date.now(), isImage:false}])
+
+    const {data} =await axios.post(`/api/message/${mode}`,{chatId:selectedChat._id, prompt,isPublished},{headers:{Authorization: token}})
+
+    if(data.success){
+      console.log("REPLY FROM SERVER:", data.reply)
+      setMessages(prev => [...prev, data.reply])
+      //decrease credits
+      if (mode === 'image'){
+        setUser(prev => ({...prev, credits:prev.credits - 2}))
+      }else{
+        setUser(prev => ({...prev, credits:prev.credits - 1}))
+ 
+      }
+    }else{
+      toast.error(data.message)
+      setPrompt(promptCopy)
+    }
+    }catch(error){
+      toast.error(error.message)
+    }finally{
+     
+      setLoading(false)
+    }
   }
 
   useEffect(()=>{

@@ -6,6 +6,6 @@ const chatRouter= express.Router();
 
 chatRouter.post('/create',protect,createChat)
 chatRouter.get("/get",protect,getchats)
-chatRouter.delete('/delete',protect,deleteChat)
+chatRouter.post('/delete',protect,deleteChat)
 
 export default chatRouter

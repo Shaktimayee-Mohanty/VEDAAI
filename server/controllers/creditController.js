@@ -1,6 +1,8 @@
 import Transaction from "../models/Transaction.js"
-import stripe from 'stripe'
+import Stripe from 'stripe'
 
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 const plans = [
     {
@@ -62,7 +64,7 @@ export const purchasePlan = async (req, res) => {
                        currency:'usd',
                        unit_amount:plan.price*100,
                        product_data:{
-                        name:plan_name
+                        name:plan.name
                        }
                     },
                     quantity: 1,

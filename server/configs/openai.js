@@ -5,4 +5,9 @@ const openai = new OpenAI({
     baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
 
 });
+const models = await openai.models.list();
+
+for await (const model of models) {
+    console.log(model.id);
+}
 export default openai

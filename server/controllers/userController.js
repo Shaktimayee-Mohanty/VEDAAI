@@ -24,7 +24,7 @@ export const registerUser = async (req, res) => {
         const user = await User.create({ name, email, password })
 
         const token = generateToken(user._id)
-        res.json({ success: false, message: error.message })
+        res.json({ success: true, token })
     } catch (error) {
 
         return res.json({ success: false, message: error.message });
@@ -87,7 +87,7 @@ export const getPublishedImages=async (req,res)=>{
        ])
        res.json({ success:true, images:publishedImageMessages.reverse()})
     }
-    catch{
+    catch(error){
        return res.json({ success:false, message:error.message})
     }
 }

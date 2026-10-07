@@ -1,10 +1,10 @@
 import Stripe from "stripe";
 import Transaction from "../models/Transaction.js";
 import User from "../models/User.js";
-import { response } from "express";
+
 
 export const stripeWebhooks = async(req,res)=>{
-    const stripe = new Stripe(process.env.Stripe_SECRET_KEY)
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
     const sig = req.headers['stripe-signature']
 
     let event;
@@ -36,7 +36,7 @@ export const stripeWebhooks = async(req,res)=>{
                     transaction.isPaid =true;
                     await transaction.save();
                 }else{
-                    return response.json({
+                    return res.json({
                         received:true,
                         message:"Ignored event: Invalid app"
                     })
@@ -47,9 +47,9 @@ export const stripeWebhooks = async(req,res)=>{
                 console.log("Unhandles event type:",event.type)
                 break;
         }
-        response.json({received:true})
+        res.json({received:true})
     }catch(error){
       console.error("webhook processing error:",error)
-      response.status(500).send('Internal Server Error')
+      res.status(500).send('Internal Server Error')
     }
 }

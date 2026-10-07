@@ -3,6 +3,7 @@ import {assets} from '../assets/assets'
 import moment from 'moment'
 import Markdown from 'react-markdown';
 import Prism from 'prismjs';
+import 'prismjs/themes/prism-tomorrow.css';
 const Message = ({message}) => {
 
 useEffect(() => {
@@ -21,7 +22,10 @@ useEffect(() => {
         </div>
       ) : (
         <div className='inline-flex flex-col gap-2 p-2 px-4 max-w-2xl bg-primary/20 dark:bg-[#57317C]/30 border border-[#80609F]/30 rounded-md my-4'>
-         {message.isImage ? (<img src={message.content} className='w-full max-w-md mt-2 rounded-md' alt='message' />
+         {message.isImage ? (<img  src={message.content}
+      className='block w-[400px] max-w-full h-auto mt-2 rounded-md'
+      alt='message'
+      onError={() => console.log('IMAGE LOAD FAILED:', message.content)} />
          ) : (
            <div className='text-sm dark:text-primary reset-tw'><Markdown>{message.content}</Markdown></div>
          )} 
